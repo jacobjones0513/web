@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="css/bulma.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="bootstrap.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   
+    <title>Wafer Template</title>
+  </head>
+ 
+ 
+  <body>
+    <style type="text/css">
+
+        .header { position: fixed; top: 0; left: 0; width: 100%; height: 50px; background: #ffffff; }
+        .wafer { margin-top: 0px;
+                 margin-left: 300px; }
+        #spinner { width: 20px; height: 15px; }
+        .spinner {
+          position: absolute;
+          background-color: #000000;
+          width: 4px; height: 4px; border-radius: 2px;
+          animation-name: bounce_circularG; animation-duration: 1s; animation-iteration-count: infinite;
+        }
+        #circularG_1 { left:0;    top:8px;  animation-delay:-1.000s; }
+        #circularG_2 { left:2px;  top:2px;  animation-delay:-0.875s; }
+        #circularG_3 { left:8px;  top:0;    animation-delay:-0.750s; }
+        #circularG_4 { left:14px; top:2px;  animation-delay:-0.625s; }
+        #circularG_5 { left:16px; top:8px;  animation-delay:-0.500s; }
+        #circularG_6 { left:14px; top:14px; animation-delay:-0.375s; }
+        #circularG_7 { left:8px;  top:16px; animation-delay:-0.250s; }
+        #circularG_8 { left:2px;  top:14px; animation-delay:-0.125s; }
+        @keyframes bounce_circularG { from { transform: scale(1); } to { transform: scale(.3); } }
+        
+        input[type=range] { width: 300px; }
+        
+    </style>
+        
+   
+
+    <div class="pos-f-t">
+
+        
+        <nav class="navbar navbar-light" style="background-color: #0077c8"> 
+            <div class = "container-fluid row">
+            <div class = row>
+            <a class="btn" href="http://tedh16-lnx:3000/" style="color:#ffffff"><i class="fa fa-home"></i></a>
+
+            <button class="navbar-toggler" style="border-color: #ffffff" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="text-white ">
+                    Data Selection
+                </span>              
+             </button>
+            </div>
+            <div class ="d-flex justify-content-right">
+              <div class="form-check form-check-inline d-flex">
+                <input class="form-check-input" type="checkbox" id="regionoverlay" onclick="change_display()"></input>
+                <label class="form-check-label" for="regionoverlay" style="color: #ffffff">Region Overlay</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="drawhisto" onclick="change_display()"></input>    
+                <label class="form-check-label" for="drawhisto" style="color: #ffffff">Histogram</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="fullres"  onclick="change_display()"></input>
+                <label class="form-check-label" for="fullres" style="color: #ffffff">Zoom</label>
+              </div>
+              <div>
+                <select class="custom-select" style="color:#0077c8" id="hdrmode" onchange="change_hdrmode()">
+                    <option>Select Filter</option>
+                    <option value="stretch">stretch</option>
+                            <!--<option value="log">log</option>-->
+                    <option value="window">window</option>
+                    <option value="equalize">equalize</option>
+                    </select>
+                </div>
+                    </div>            
+            </div>
+        </nav>  
+    </div>
+
+       
+        <div class="collapse" id="navbarToggleExternalContent">
+                <div class="bg p-5" style="background-color:#A9A9A9">
+
+                    <!--<div class="columns is-gapless">
+                        <div class="column is-2" style="padding-left: 10px">
+-------------------------------------------------------------------------------------------------------------------->
+                        <div class = "container-fluid">
+                        <div class = "row">
+                        <div class = "col-9">
+                          <div id="logsdiv">
+                            <div class="field">                           
+                            <!--<label style="color:#ffffff"><strong>Pesums: </strong></label>-->
+                              <div class="input-group mb-3">
+                                <input class="form-control" type="text" id="sums" placeholder="e.g. Lot, Wafer, DSID,..." onchange="updatesums()" tabindex="1"></input>  
+                                <select id="sumslist" multiple hidden size="2" style="width: 100%" onchange="selectsums()" tabindex="3"></select>  
+                                <a class="button is-small is-gapless is-hidden" hidden id="sumslistclear" onclick="deselectlist('sums')">clear</a>
+                                <a class="button is-small is-gapless is-hidden" hidden id="sumslisthide" onclick="hidelist('sums')">unhide</a>
+                                <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" style="color:#ffffff; border-color: #ffffff; background-color: #0077c8" type="button" id="sumslistbutton" onclick="updatesums()" tabindex="2">Get Sums</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class = "col-3">
+                            <div class="field">
+                             <!-- <label style="color:#ffffff"><strong>Bin:</strong></label>-->
+                              <div class="input-group mb-3">
+                                <input class="form-control" type="text" id="log" placeholder="Select Bin" onchange="getbins()" tabindex="1"></input>
+                                <select id="binlist" multiple hidden size="2" style="width: 100%" onchange="selectbin()" tabindex="3"></select>    
+                                <a class="button is-small is-gapless is-hidden" hidden id="binlistclear" onclick="deselectlist('log')">clear</a>
+                                <a class="button is-small is-gapless is-hidden" hidden id="binlisthide" onclick="hidelist('log')">unhide</a> 
+                                <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" style="color:#ffffff; border-color: #ffffff; background-color: #0077c8" type="button" id="binlistbutton" onclick="getbins()" tabindex="2">Get Bins</button>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+
+                          <button type="button" id="linkbutton" onclick="get_link(1)" style="display: none;">Get Link</button>
+                          <input type="text" size="30" id="link" placeholder="file" style="display: none"></input>
+
+
+
+
+                                                                          <!--
+                            <div class = "field"></div>
+                                <label style="color:#ffffff"><strong>Bin: </strong></label>
+                                    <div class="input-group">
+                                    
+                                    <select class="custom-select" id="inputGroupSelect04" aria-label="Example select with button addon">
+                                      <option selected>Choose...</option>
+                                      <option value="1">One</option>
+                                      <option value="2">Two</option>
+                                      <option value="3">Three</option>
+                                    </select>
+                                    <div class="input-group-append">
+                                      <button class="btn btn-outline-secondary" style="color:#ffffff; border-color: #ffffff" type="button">Load Wafer</button>
+                                   </div>
+                             </div>      
+                            </div>
+                        </div>
+-->
+                            
+                </div>
+      </div>
+    </div>
+
+    
+
+  <div style="display: none; position: relative" id="spinner">
+    <div id="circularG_1" class="spinner"></div>
+    <div id="circularG_2" class="spinner"></div>
+    <div id="circularG_3" class="spinner"></div>
+    <div id="circularG_4" class="spinner"></div>
+    <div id="circularG_5" class="spinner"></div>
+    <div id="circularG_6" class="spinner"></div>
+    <div id="circularG_7" class="spinner"></div>
+    <div id="circularG_8" class="spinner"></div>
+  </div>
+
+    <div class="container-flui row justify-content-around mt-3">
+    <div>
+
+        <label for="customRange3"style="color: #0077c8" ></label>
+        <input type="range" class="custom-range" min="0" max="5" step="0.5" id="customRange3">
+
+    </div>   
+    <div>
+        <label for="customRange3"style="color: #0077c8" ></label>
+        <input type="range" class="custom-range" min="0" max="5" step="0.5" id="customRange3">    
+    </div>
+    </div>  
+
+  
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+  </body>
+</html>
